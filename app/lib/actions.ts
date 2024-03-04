@@ -21,6 +21,15 @@ const FormSchema = z.object({
   date: z.string(),
 });
 
+export type State = {
+  errors?: {
+    customerId?: string[];
+    amount?: string[];
+    status?: string[];
+  };
+  message?: string | null;
+};
+
 const CreateInvoice = FormSchema.omit({ id: true, date: true });
 const UpdateInvoice = FormSchema.omit({ id: true, date: true });
 
@@ -28,9 +37,10 @@ export async function updateInvoice(
   id: string,
   prevState: State,
   formData: FormData,
-  ): Promise<State> {
+) {
   const validatedFields = UpdateInvoice.safeParse({
     customerId: formData.get('customerId'),
+    sellerId: formData.get('sellerId'),
     amount: formData.get('amount'),
     status: formData.get('status'),
   });
@@ -48,7 +58,7 @@ export async function updateInvoice(
   try {
     await sql`
       UPDATE invoices
-      SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status}
+      SET customer_id = ${customerId},amount = ${amountInCents}, status = ${status}
       WHERE id = ${id}
     `;
   } catch (error) {
@@ -58,14 +68,6 @@ export async function updateInvoice(
   revalidatePath('/dashboard/invoices');
   redirect('/dashboard/invoices');
 }
-export type State = {
-  errors?: {
-    customerId?: string[];
-    amount?: string[];
-    status?: string[];
-  };
-  message?: string | null;
-};
 
 export async function createInvoice(
   prevState: State,
