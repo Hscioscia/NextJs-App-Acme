@@ -1,4 +1,4 @@
-'use server';
+'use client';
 
 import { z } from 'zod';
 import { sql } from '@vercel/postgres';
@@ -72,7 +72,7 @@ export async function updateInvoice(
 export async function createInvoice(
   prevState: State,
   formData: FormData,
-): Promise<State> {
+){
 
   const validatedFields = CreateInvoice.safeParse({
     customerId: formData.get('customerId'),

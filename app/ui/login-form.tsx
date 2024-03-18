@@ -12,6 +12,7 @@ import { useFormState, useFormStatus } from 'react-dom';
 import { authenticate } from '@/app/lib/actions';
 
 export default function LoginForm() {
+
   const [errorMessage, dispatch] = useFormState(authenticate, undefined);
 
   return (
@@ -80,6 +81,7 @@ export default function LoginForm() {
 }
 
 function LoginButton() {
+  
   const { pending } = useFormStatus();
  
   return (
